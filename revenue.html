@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WP Security Agency — Revenue Architecture v2</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+:root{--bg:#07090E;--s:#0C1017;--s2:#111620;--bd:#1A2030;--bd2:#252D3D;--t:#B8C4D4;--td:#5A6A80;--tb:#E8EDF4;--green:#34D399;--blue:#38BDF8;--purple:#A78BFA;--orange:#FB923C;--red:#EF4444;--gold:#FCD34D;--pink:#EC4899;--amber:#F59E0B;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}body{background:var(--bg);color:var(--t);font-family:var(--sans);overflow-x:hidden;}
+.hdr{text-align:center;padding:40px 20px 28px;border-bottom:1px solid var(--bd);position:relative;}.hdr::after{content:'';position:absolute;bottom:-1px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--green)40,transparent);}
+.hdr-tag{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:2px;margin-bottom:10px;}.hdr h1{font-size:clamp(20px,4.5vw,30px);font-weight:700;color:var(--tb);margin-bottom:8px;}.hdr h1 em{font-style:normal;color:var(--green);}.hdr p{font-size:12px;color:var(--td);max-width:620px;margin:0 auto;line-height:1.6;}
+.wrap{max-width:920px;margin:0 auto;padding:24px 16px 60px;}.st{font-size:15px;font-weight:700;color:var(--tb);margin:32px 0 6px;display:flex;align-items:center;gap:8px;}.ss{font-size:11px;color:var(--td);margin-bottom:18px;line-height:1.5;}
+.mtable{width:100%;border-collapse:collapse;margin-bottom:28px;font-size:10.5px;}.mtable th{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--td);text-align:left;padding:8px 10px;border-bottom:2px solid var(--bd2);font-weight:600;}.mtable td{padding:8px 10px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.5;}.mtable tr:hover{background:var(--s2);}.mtable .provider{color:var(--tb);font-weight:600;}.mtable .price{font-family:var(--mono);font-weight:600;}.mtable .cat-row td{background:var(--s);font-weight:700;color:var(--td);font-family:var(--mono);font-size:9px;letter-spacing:1px;border-bottom:1px solid var(--bd2);padding:10px;}.tag-s{font-size:8px;padding:2px 6px;border-radius:3px;font-weight:600;font-family:var(--mono);white-space:nowrap;}
+.tiers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:32px;}.tier{background:var(--s);border:1px solid var(--bd);border-radius:14px;padding:20px 18px;position:relative;overflow:hidden;cursor:pointer;transition:all 0.25s;}.tier:hover{border-color:var(--tc);}.tier.expanded{border-color:var(--tc);background:var(--s2);}.tier-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0;}.tier-badge{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:1.5px;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:10px;}.tier-name{font-size:14px;font-weight:700;color:var(--tb);margin-bottom:4px;}.tier-price{font-family:var(--mono);font-size:22px;font-weight:700;margin-bottom:2px;}.tier-freq{font-size:10px;color:var(--td);margin-bottom:6px;}.tier-vs{font-size:9px;color:var(--td);margin-bottom:12px;padding:6px 8px;background:var(--bg);border-radius:6px;border:1px solid var(--bd);line-height:1.5;}.tier-vs b{color:var(--green);font-weight:600;}.tier-desc{font-size:10.5px;color:var(--td);line-height:1.55;margin-bottom:14px;}.tl{list-style:none;padding:0;}.tl li{font-size:10.5px;color:var(--t);padding:4px 0;border-bottom:1px solid var(--bd);}.tl li::before{content:'✓';margin-right:8px;font-weight:700;}.tier-det{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--bd);}.tier.expanded .tier-det{display:block;}.det-i{font-size:10px;color:var(--t);padding:3px 0;line-height:1.5;}.det-i::before{content:'›';margin-right:6px;font-weight:700;}.det-l{font-family:var(--mono);font-size:9px;color:var(--td);letter-spacing:1px;margin:10px 0 4px;font-weight:600;}.det-w{font-size:10px;color:var(--gold);background:#FCD34D08;border:1px solid #FCD34D20;border-radius:6px;padding:8px 10px;margin-top:10px;line-height:1.5;}
+.upsells{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px;}.ups{background:var(--s);border:1px solid var(--bd);border-radius:12px;padding:16px;border-left:3px solid var(--uc);cursor:pointer;transition:all 0.2s;}.ups:hover,.ups.expanded{background:var(--s2);}.ups-phase{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.5px;margin-bottom:4px;}.ups-title{font-size:12px;font-weight:700;color:var(--tb);margin-bottom:4px;}.ups-moment{font-size:10.5px;color:var(--td);line-height:1.5;}.ups-script{display:none;margin-top:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;font-size:10px;color:var(--t);line-height:1.65;font-style:italic;}.ups.expanded .ups-script{display:block;}.ups-script b{color:var(--green);font-style:normal;}
+.addons{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:32px;}.addon{background:var(--s);border:1px solid var(--bd);border-radius:10px;padding:14px;text-align:center;}.addon-ico{font-size:22px;margin-bottom:6px;}.addon-nm{font-size:11px;font-weight:700;color:var(--tb);margin-bottom:2px;}.addon-pr{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--green);margin-bottom:4px;}.addon-ds{font-size:9px;color:var(--td);line-height:1.4;}
+.rev{background:linear-gradient(135deg,#0F172A,#1A1033);border:1px solid #312E8140;border-radius:14px;padding:22px;margin-bottom:16px;}.rev h3{font-size:13px;color:var(--purple);margin-bottom:14px;}.rev-r{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1E293B;font-size:11px;}.rev-l{color:var(--td);}.rev-v{font-family:var(--mono);font-weight:600;}.rev-t{display:flex;justify-content:space-between;padding:10px 0 0;font-size:14px;font-weight:700;color:var(--tb);}
+.journey{display:flex;flex-direction:column;gap:0;margin-bottom:32px;position:relative;}.journey::before{content:'';position:absolute;left:17px;top:20px;bottom:20px;width:2px;background:repeating-linear-gradient(to bottom,var(--pink)30,var(--pink)30 4px,transparent 4px,transparent 8px);opacity:0.5;}.j-step{display:flex;align-items:flex-start;gap:14px;padding:10px 0;position:relative;z-index:1;}.j-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--s);border:2px solid;}.j-info{flex:1;}.j-when{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.5px;margin-bottom:2px;}.j-what{font-size:11px;font-weight:700;color:var(--tb);margin-bottom:2px;}.j-how{font-size:10px;color:var(--td);line-height:1.5;}.j-sell{font-size:9px;color:var(--green);margin-top:4px;font-weight:600;}
+.play{background:var(--s);border:1px solid var(--bd);border-radius:14px;padding:20px;margin-bottom:16px;}.play h3{font-size:13px;margin-bottom:14px;}.ps{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;}.ps-n{font-family:var(--mono);font-size:9px;font-weight:700;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;}.ps-t{font-size:10.5px;color:var(--t);line-height:1.55;}.ps-t b{color:var(--tb);}
+.callout{background:var(--s);border:1px solid var(--bd);border-left:3px solid;border-radius:10px;padding:16px;margin-bottom:16px;font-size:10.5px;line-height:1.6;}.callout h4{font-size:12px;color:var(--tb);margin-bottom:6px;}
+@media(max-width:700px){.tiers{grid-template-columns:1fr;}.upsells{grid-template-columns:1fr;}.addons{grid-template-columns:1fr 1fr;}.mtable{font-size:9px;}.mtable th,.mtable td{padding:6px 6px;}}
+</style>
+</head>
+<body>
+<div class="hdr">
+<div class="hdr-tag">REVENUE ARCHITECTURE V2 — REAL MARKET DATA</div>
+<h1>Service Packages &amp; <em>Upsell Playbook</em></h1>
+<p>Industry pricing benchmarked against Wordfence, Sucuri, MalCare, and freelancer rates. Agency positioning with real margin analysis. Every number sourced from current vendor pricing and security reports.</p>
+</div>
+<div class="wrap">
+
+<div class="st">📊 Competitive Landscape — Real Market Pricing</div>
+<div class="ss">What your clients can buy today without you. This table defines where you position and why your pricing is justified.</div>
+
+<table class="mtable">
+<thead><tr><th>PROVIDER</th><th>TYPE</th><th>PRICE</th><th>WHAT THEY GET</th><th>WHAT'S MISSING</th></tr></thead>
+<tbody>
+<tr class="cat-row"><td colspan="5">TIER 1 — DIY / PLUGIN-ONLY (CLIENT MANAGES THEMSELVES)</td></tr>
+<tr><td class="provider">Wordfence Free</td><td>Plugin</td><td class="price">$0</td><td>Firewall + scanner, 30-day delayed rules</td><td>No real-time protection, no human support, no cleanup</td></tr>
+<tr><td class="provider">MalCare</td><td>Plugin</td><td class="price">$99/yr</td><td>Off-site scanning, one-click malware removal</td><td>No human analyst, no hardening, no incident response</td></tr>
+<tr><td class="provider">Wordfence Premium</td><td>Plugin</td><td class="price">$149/yr</td><td>Real-time firewall rules + malware signatures</td><td>Self-managed. No human support, no cleanup included</td></tr>
+<tr><td class="provider">Sucuri Basic</td><td>Platform</td><td class="price">$199/yr</td><td>WAF + CDN + unlimited cleanup + blacklist removal</td><td>12-hr scan intervals, no proactive hardening, ticket support</td></tr>
+<tr><td class="provider">Sucuri Business</td><td>Platform</td><td class="price">$499/yr</td><td>Fastest response, frequent scans, WAF, DDoS</td><td>Platform-only — no dedicated human, no code audit</td></tr>
+<tr class="cat-row"><td colspan="5">TIER 2 — MANAGED SERVICE (HUMAN INVOLVED, LIMITED SCOPE)</td></tr>
+<tr><td class="provider">Wordfence Care</td><td>Managed</td><td class="price">$590/yr <span class="tag-s" style="background:#38BDF812;color:var(--blue)">~€45/mo</span></td><td>Install, configure, monitor. Unlimited IR during biz hours</td><td>Business hours only. One plugin ecosystem. No custom code review</td></tr>
+<tr><td class="provider">Wordfence Response</td><td>Managed</td><td class="price">$1,250/yr <span class="tag-s" style="background:#A78BFA12;color:var(--purple)">~€100/mo</span></td><td>24/7/365, 1-hour response, full forensics</td><td>Still one plugin only. No proactive code audit, no hosting hardening</td></tr>
+<tr><td class="provider">WP Care Plans</td><td>Generalist</td><td class="price">$100–$300/mo</td><td>Updates, backups, security monitoring, uptime</td><td>Security is one feature, not the specialty</td></tr>
+<tr><td class="provider">Update service</td><td>Freelancer</td><td class="price">~$750/yr</td><td>Plugin/theme/core updates only</td><td>No monitoring, no IR, no hardening, no scans</td></tr>
+<tr class="cat-row"><td colspan="5">TIER 3 — ONE-OFF CLEANUPS (REACTIVE ONLY)</td></tr>
+<tr><td class="provider">Budget (FixMySite, GoDaddy)</td><td>One-off</td><td class="price">$199–$299</td><td>Basic malware removal</td><td>No root cause, no reinfection guarantee, cookie-cutter</td></tr>
+<tr><td class="provider">Freelancer</td><td>One-off</td><td class="price">$500–$1,500</td><td>Manual cleanup, varies by skill</td><td>No process, no SLA, no post-mortem</td></tr>
+<tr><td class="provider">Agency cleanup</td><td>One-off</td><td class="price">$1,500–$5,000+</td><td>Full IR: forensics, cleanup, hardening, report</td><td>Expensive per-incident. Clients buy after breach, not before</td></tr>
+</tbody>
+</table>
+
+<div class="callout" style="border-left-color:var(--gold)"><h4>💡 The Positioning Gap</h4>Wordfence Response at ~€100/mo is the most expensive productized WP security service. It gives you one plugin's team. <b style="color:var(--green)">Your agency gives them a dedicated security operation: multi-tool monitoring, proactive code audits, managed updates, human senior responders, guaranteed reinfection coverage.</b> The gap between €100/mo and €500+/mo is where nobody competes with a productized offer. That's your market.</div>
+
+<div class="callout" style="border-left-color:var(--red)"><h4>🔥 Numbers That Sell</h4>Average malware attack cost on SMBs: <b style="color:var(--red)">$25,000+</b>. 60% go out of business within 6 months of a serious attack. Prevention ~$750/yr. Cleanup starts $3,000. Serious breaches: $120K–$1.24M. <b style="color:var(--gold)">Your retainer at €500/mo = €6K/yr. One prevented breach saves $25K+. The ROI is undeniable.</b></div>
+
+<div class="st">💰 Your Agency Tiers</div>
+<div class="ss">You're not selling software. You're selling a security team. The client doesn't know or need to know if that's 1 person or 10. They're buying outcomes and peace of mind.</div>
+
+<div class="tiers">
+<div class="tier" style="--tc:var(--red)" onclick="togTier(this)">
+<div class="tier-bar" style="background:var(--red)"></div>
+<div class="tier-badge" style="background:#EF444412;color:var(--red);border:1px solid #EF444425">ONE-TIME</div>
+<div class="tier-name">Emergency Response</div>
+<div class="tier-price" style="color:var(--red)">€1,500–€5,000</div>
+<div class="tier-freq">per incident</div>
+<div class="tier-vs">Freelancers: €500–€1,500. Budget services: €199. <b>You charge more because you deliver forensics, root cause, reinfection guarantee, post-mortem report.</b></div>
+<div class="tier-desc">Full IR pipeline. Contain → Analyze → Eradicate → Verify → 14-day watch → post-mortem PDF. The door into the funnel.</div>
+<ul class="tl"><li>2-hour containment SLA</li><li>Full forensic analysis & root cause</li><li>Complete malware eradication</li><li>Full credential rotation</li><li>Hardening package included</li><li>14-day reinfection watch</li><li>Post-mortem PDF report</li><li>Blacklist removal</li><li>30-day reinfection guarantee</li></ul>
+<div class="tier-det">
+<div class="det-l">PRICING</div>
+<div class="det-i">€1,500 — brochure/blog, single vector, no e-commerce</div>
+<div class="det-i">€2,500–€3,500 — WooCommerce, membership, multisite</div>
+<div class="det-i">€4,000–€5,000 — data breach, GDPR, complex hosting</div>
+<div class="det-l">YOUR COST</div>
+<div class="det-i">Tools: ~€20. Time: 4–12 hours. At €1,500 for 6 hours = €250/hr effective rate</div>
+<div class="det-w">60% should convert to Shield. Post-mortem is the sales moment. First month free as bridge from reinfection watch.</div>
+</div></div>
+
+<div class="tier" style="--tc:var(--blue)" onclick="togTier(this)">
+<div class="tier-bar" style="background:var(--blue)"></div>
+<div class="tier-badge" style="background:#38BDF812;color:var(--blue);border:1px solid #38BDF825">RETAINER</div>
+<div class="tier-name">Shield</div>
+<div class="tier-price" style="color:var(--blue)">€400–€800</div>
+<div class="tier-freq">per site / month</div>
+<div class="tier-vs">Wordfence Response ~€100/mo (plugin only). WP care plans €100–€300/mo (generalist). <b>You're 3–5× Wordfence but deliver 10× the service.</b></div>
+<div class="tier-desc">The core business. Multi-agent monitoring, proactive scanning, managed updates, 4-hour response SLA. 80% automated, 20% human oversight.</div>
+<ul class="tl"><li>24/7 multi-agent monitoring</li><li>Daily malware & integrity scans</li><li>Weekly vulnerability audit</li><li>Managed updates (staging → production)</li><li>WAF rule management</li><li>Monthly security report PDF</li><li>4-hour incident response SLA</li><li>1 emergency cleanup/quarter included</li><li>Daily verified off-site backups</li><li>Dedicated Slack channel</li></ul>
+<div class="tier-det">
+<div class="det-l">PRICING</div>
+<div class="det-i">€400/mo — business site, <€10K/mo revenue</div>
+<div class="det-i">€600/mo — WooCommerce up to €50K/mo</div>
+<div class="det-i">€800/mo — high-traffic, custom integrations</div>
+<div class="det-l">YOUR COST</div>
+<div class="det-i">Tools: ~€25/mo. Time: ~3–5 hrs/mo. At €500/mo avg, margin 75%+</div>
+<div class="det-w">Predictable MRR. Automation handles detection/triage. Human time only on medium+ severity and monthly reports. Cost-per-client drops as fleet grows.</div>
+</div></div>
+
+<div class="tier" style="--tc:var(--purple)" onclick="togTier(this)">
+<div class="tier-bar" style="background:var(--purple)"></div>
+<div class="tier-badge" style="background:#A78BFA12;color:var(--purple);border:1px solid #A78BFA25">PREMIUM</div>
+<div class="tier-name">Fortress</div>
+<div class="tier-price" style="color:var(--purple)">€1,500–€3,000</div>
+<div class="tier-freq">per site / month</div>
+<div class="tier-vs"><b>Nobody sells this.</b> Wordfence caps at €100/mo. Sucuri agency plans are platform-only. No productized WP security agency at this tier. White space.</div>
+<div class="tier-desc">For sites where downtime = serious revenue loss. Dedicated senior engineer. 1-hour SLA. Unlimited cleanups. Quarterly architecture reviews.</div>
+<ul class="tl"><li>Everything in Shield</li><li>Dedicated senior engineer</li><li>1-hour response SLA (24/7)</li><li>Monthly pen test simulation</li><li>Custom SAST rules for codebase</li><li>Supply chain monitoring</li><li>GitHub CI/CD integration</li><li>Quarterly architecture review</li><li>Priority named-engineer Slack</li><li>Unlimited emergency cleanups</li><li>GDPR/CRA documentation support</li></ul>
+<div class="tier-det">
+<div class="det-l">TARGET</div>
+<div class="det-i">WooCommerce €100K+/mo — 1 hour downtime > monthly retainer cost</div>
+<div class="det-i">SaaS on WordPress (LMS, membership, marketplace)</div>
+<div class="det-i">GDPR-sensitive sites (health, finance, legal)</div>
+<div class="det-l">MATH</div>
+<div class="det-i">Store at €200K/mo loses ~€280/hour in downtime</div>
+<div class="det-i">One 48-hour incident = €13,400+ lost. Fortress at €2K/mo = €24K/yr. One incident pays 2 years.</div>
+<div class="det-w">3–5 Fortress clients at €2,000/mo = €6K–€10K MRR from premium tier alone.</div>
+</div></div>
+</div>
+
+<div class="st">🔎 Entry Point — €200 Security Audit</div>
+<div class="callout" style="border-left-color:var(--green)"><h4>The Trojan Horse</h4><b style="color:var(--green)">€200 one-time.</b> ~1hr automated scan + 30min human review. Professional PDF in 48 hours. Nearly every WP site has findings. At 40% conversion: 10 audits/mo = 4 Shield clients = <b style="color:var(--green)">€1,600–€3,200 MRR added/month</b>. Acquisition cost: €0.</div>
+
+<div class="st">🎯 Upsell Triggers</div>
+<div class="ss">Tap for conversation scripts.</div>
+<div class="upsells">
+<div class="ups" style="--uc:var(--red)" onclick="togUps(this)"><div class="ups-phase" style="color:var(--red)">POST-MORTEM</div><div class="ups-title">Emergency → Shield</div><div class="ups-moment">Client just survived a breach. Show what monitoring would have caught. First month free.</div><div class="ups-script"><b>Script:</b> "This vuln was public 22 days before you were hit. With Shield, we catch it day 1. Your retainer at €500/mo = €6K/yr. This incident cost €X. The math speaks for itself. I'll extend your reinfection watch into a full first month of Shield at no cost."</div></div>
+<div class="ups" style="--uc:var(--blue)" onclick="togUps(this)"><div class="ups-phase" style="color:var(--blue)">MONTHLY REPORT</div><div class="ups-title">Shield → Add-Ons</div><div class="ups-moment">Report shows 47 blocked attacks, 3 patched vulns. Now upsell depth — code audit, pen test.</div><div class="ups-script"><b>Script:</b> "We flagged 2 custom plugins with SQL injection. Standard scan catches known patterns. A code audit catches the deeper issues. €800 one-off or €200/mo added to retainer."</div></div>
+<div class="ups" style="--uc:var(--orange)" onclick="togUps(this)"><div class="ups-phase" style="color:var(--orange)">ROOT CAUSE</div><div class="ups-title">Retainer → Hosting Migration</div><div class="ups-moment">Breach happened because shared hosting has no WAF, outdated PHP, compromised neighbors.</div><div class="ups-script"><b>Script:</b> "Root cause: your hosting. 14 other sites on the server, 3 compromised. Migration to managed hosting for €800 eliminates this vector entirely."</div></div>
+<div class="ups" style="--uc:var(--green)" onclick="togUps(this)"><div class="ups-phase" style="color:var(--green)">REINFECTION CATCH</div><div class="ups-title">One-Off → Ongoing</div><div class="ups-moment">14-day watch catches dormant backdoor. You saved them again. Trust = absolute.</div><div class="ups-script"><b>Script:</b> "Our monitoring caught a dormant backdoor in uploads/ 5 days after cleanup. Without the watch, you'd be reinfected. This is exactly why ongoing monitoring matters."</div></div>
+<div class="ups" style="--uc:var(--gold)" onclick="togUps(this)"><div class="ups-phase" style="color:var(--gold)">QUARTERLY REVIEW</div><div class="ups-title">Single → Fleet</div><div class="ups-moment">Client owns multiple sites. Show dashboard for one — offer portfolio pricing at 25% discount.</div><div class="ups-script"><b>Script:</b> "6 months clean, 892 attacks blocked. You manage 8 other sites — portfolio pricing at 25% off per site with unified dashboard."</div></div>
+<div class="ups" style="--uc:var(--purple)" onclick="togUps(this)"><div class="ups-phase" style="color:var(--purple)">MONTH 12</div><div class="ups-title">Shield → Fortress</div><div class="ups-moment">Business grew. Revenue up, risk up. Shield SLA no longer matches the stakes.</div><div class="ups-script"><b>Script:</b> "Your store does €150K/mo now. One hour downtime = €200+. Shield's 4-hr SLA was right at €30K/mo. At this scale you need 1-hour guarantee + dedicated engineer. Fortress at €2K/mo — less than one 10-hour outage."</div></div>
+</div>
+
+<div class="st">🧩 À La Carte Add-Ons</div>
+<div class="addons">
+<div class="addon"><div class="addon-ico">🔍</div><div class="addon-nm">Code Audit</div><div class="addon-pr">€800–€2,000</div><div class="addon-ds">SAST of custom plugins, themes, AI code</div></div>
+<div class="addon"><div class="addon-ico">🚚</div><div class="addon-nm">Migration</div><div class="addon-pr">€600–€1,500</div><div class="addon-ds">Zero-downtime move to managed hosting</div></div>
+<div class="addon"><div class="addon-ico">🔐</div><div class="addon-nm">Hardening</div><div class="addon-pr">€400–€800</div><div class="addon-ds">2FA, headers, permissions, REST lockdown</div></div>
+<div class="addon"><div class="addon-ico">💾</div><div class="addon-nm">Backup System</div><div class="addon-pr">€250–€500</div><div class="addon-ds">Off-site + immutable + verified restore</div></div>
+<div class="addon"><div class="addon-ico">📊</div><div class="addon-nm">Pen Test</div><div class="addon-pr">€1,200–€3,000</div><div class="addon-ds">Simulated attack + findings + retest</div></div>
+<div class="addon"><div class="addon-ico">⚡</div><div class="addon-nm">Performance</div><div class="addon-pr">€400–€800</div><div class="addon-ds">Security + speed: remove bloat, cache, DB</div></div>
+<div class="addon"><div class="addon-ico">📋</div><div class="addon-nm">GDPR Review</div><div class="addon-pr">€500–€1,000</div><div class="addon-ds">Data audit, consent, breach notification SOP</div></div>
+<div class="addon"><div class="addon-ico">🏫</div><div class="addon-nm">Training</div><div class="addon-pr">€600–€1,200</div><div class="addon-ds">2-hr live: phishing, passwords, admin safety</div></div>
+<div class="addon"><div class="addon-ico">🔀</div><div class="addon-nm">CI/CD Security</div><div class="addon-pr">€800–€1,500</div><div class="addon-ds">GitHub PR gates, Actions, secret scanning</div></div>
+</div>
+
+<div class="st">📈 Revenue Model — Year 1</div>
+<div class="ss">15 clients across tiers. Solo operator + automation. No employees yet.</div>
+
+<div class="rev"><h3>Monthly Recurring (MRR)</h3>
+<div class="rev-r"><span class="rev-l">10× Shield @ avg €500/mo</span><span class="rev-v" style="color:var(--blue)">€5,000</span></div>
+<div class="rev-r"><span class="rev-l">2× Fortress @ avg €2,000/mo</span><span class="rev-v" style="color:var(--purple)">€4,000</span></div>
+<div class="rev-r"><span class="rev-l">3× maintenance @ €150/mo</span><span class="rev-v" style="color:var(--td)">€450</span></div>
+<div class="rev-t"><span>MRR</span><span style="color:var(--green)">€9,450</span></div></div>
+
+<div class="rev"><h3>Variable (Monthly Avg)</h3>
+<div class="rev-r"><span class="rev-l">~1.5 emergencies @ avg €2,000</span><span class="rev-v" style="color:var(--red)">€3,000</span></div>
+<div class="rev-r"><span class="rev-l">~3 audits @ €200</span><span class="rev-v" style="color:var(--green)">€600</span></div>
+<div class="rev-r"><span class="rev-l">~1 add-on @ avg €1,000</span><span class="rev-v" style="color:var(--orange)">€1,000</span></div>
+<div class="rev-t"><span>Variable</span><span style="color:var(--green)">€4,600</span></div></div>
+
+<div class="rev" style="background:linear-gradient(135deg,#0B1A14,#0F172A);border-color:#134E3040;">
+<h3 style="color:var(--green)">Year 1 Total</h3>
+<div class="rev-r"><span class="rev-l">MRR</span><span class="rev-v" style="color:var(--blue)">€9,450</span></div>
+<div class="rev-r"><span class="rev-l">Variable</span><span class="rev-v" style="color:var(--orange)">€4,600</span></div>
+<div class="rev-r"><span class="rev-l">Blended Monthly</span><span class="rev-v" style="color:var(--green)">€14,050</span></div>
+<div class="rev-t"><span>Annualized</span><span style="color:var(--green)">~€168,000</span></div>
+<div style="font-size:10px;color:var(--td);margin-top:10px;line-height:1.6;">
+<b style="color:var(--tb)">Costs:</b> Tools ~€25/client/mo = €375/mo. Infra ~€100/mo. No employees Y1.<br>
+<b style="color:var(--tb)">Y2:</b> 30 clients, 1 Tier 1 hire (~€2.5K/mo) → €20K+ MRR.<br>
+<b style="color:var(--tb)">Y3:</b> 50+ clients, 3-person team → €35K+ MRR. <b style="color:var(--green)">Automation is the leverage.</b>
+</div></div>
+
+<div class="st">🗺️ Client Lifecycle</div>
+<div class="journey">
+<div class="j-step"><div class="j-dot" style="border-color:var(--amber)">🔎</div><div class="j-info"><div class="j-when" style="color:var(--amber)">WEEK 0</div><div class="j-what">€200 Security Audit</div><div class="j-how">Low commitment. Professional PDF. 48-hour delivery.</div><div class="j-sell">→ 40% convert to Shield</div></div></div>
+<div class="j-step"><div class="j-dot" style="border-color:var(--red)">🚨</div><div class="j-info"><div class="j-when" style="color:var(--red)">OR: EMERGENCY</div><div class="j-what">€1,500–€5,000 Cleanup</div><div class="j-how">Full IR pipeline. 14-day watch. Post-mortem PDF.</div><div class="j-sell">→ 60% convert to retainer</div></div></div>
+<div class="j-step"><div class="j-dot" style="border-color:var(--blue)">🛡️</div><div class="j-info"><div class="j-when" style="color:var(--blue)">MONTH 1</div><div class="j-what">Shield Starts (€400–€800/mo)</div><div class="j-how">Onboarding, agents deployed, first report shows blocked attacks.</div><div class="j-sell">→ Sell hardening + backup (€650–€1,300)</div></div></div>
+<div class="j-step"><div class="j-dot" style="border-color:var(--orange)">📊</div><div class="j-info"><div class="j-when" style="color:var(--orange)">MONTH 3</div><div class="j-what">Quarterly Review</div><div class="j-how">3-month data. ROI proof. Attacks blocked, vulns patched.</div><div class="j-sell">→ Code audit, pen test upsell</div></div></div>
+<div class="j-step"><div class="j-dot" style="border-color:var(--green)">📈</div><div class="j-info"><div class="j-when" style="color:var(--green)">MONTH 6</div><div class="j-what">Expansion</div><div class="j-how">6 months clean. Trust established. Multiple sites? Partners?</div><div class="j-sell">→ Fleet pricing 25% off. Referral program.</div></div></div>
+<div class="j-step"><div class="j-dot" style="border-color:var(--purple)">🏰</div><div class="j-info"><div class="j-when" style="color:var(--purple)">MONTH 12+</div><div class="j-what">Fortress Upgrade</div><div class="j-how">Business grew. Shield SLA no longer matches risk.</div><div class="j-sell">→ €1,500–€3,000/mo. Dedicated engineer. 1-hr SLA.</div></div></div>
+</div>
+
+<div class="st">📖 Sales Playbooks</div>
+<div class="play"><h3 style="color:var(--amber)">Post-Mortem Close</h3>
+<div class="ps"><div class="ps-n" style="background:#F59E0B12;color:var(--amber)">1</div><div class="ps-t"><b>Deliver on a live call, not email.</b> Walk through the timeline visually.</div></div>
+<div class="ps"><div class="ps-n" style="background:#F59E0B12;color:var(--amber)">2</div><div class="ps-t"><b>Show "what if."</b> "Vuln was public 22 days. With Shield, we catch it day 1."</div></div>
+<div class="ps"><div class="ps-n" style="background:#F59E0B12;color:var(--amber)">3</div><div class="ps-t"><b>Quantify the cost.</b> Downtime × hourly revenue + cleanup + reputation.</div></div>
+<div class="ps"><div class="ps-n" style="background:#F59E0B12;color:var(--amber)">4</div><div class="ps-t"><b>Insurance math.</b> "€500/mo = €6K/yr. This incident cost €X. Retainer pays for itself preventing one incident."</div></div>
+<div class="ps"><div class="ps-n" style="background:#F59E0B12;color:var(--amber)">5</div><div class="ps-t"><b>First month free.</b> Extend reinfection watch to full Shield month. Zero friction.</div></div>
+<div class="ps"><div class="ps-n" style="background:#F59E0B12;color:var(--amber)">6</div><div class="ps-t"><b>Close on the call.</b> Agreement ready. Monthly, 30-day cancel. "Monitoring live by tomorrow."</div></div>
+</div>
+
+<div class="play"><h3 style="color:var(--green)">€200 Audit Funnel</h3>
+<div class="ps"><div class="ps-n" style="background:#34D39912;color:var(--green)">1</div><div class="ps-t"><b>Promote everywhere:</b> site, LinkedIn, WP communities, hosting partner referrals.</div></div>
+<div class="ps"><div class="ps-n" style="background:#34D39912;color:var(--green)">2</div><div class="ps-t"><b>Run baseline agent.</b> 1hr automated + 30min human. PDF in 48 hours.</div></div>
+<div class="ps"><div class="ps-n" style="background:#34D39912;color:var(--green)">3</div><div class="ps-t"><b>Audit always finds problems.</b> Outdated plugins, no 2FA, exposed endpoints. Every WP site has something.</div></div>
+<div class="ps"><div class="ps-n" style="background:#34D39912;color:var(--green)">4</div><div class="ps-t"><b>Two options:</b> "Fix it yourself" or "We fix + monitor." Most pick (b).</div></div>
+<div class="ps"><div class="ps-n" style="background:#34D39912;color:var(--green)">5</div><div class="ps-t"><b>CAC = €0.</b> Audit fee covers your time. Every conversion = pure profit.</div></div>
+</div>
+
+</div>
+<script>
+function togTier(el){const w=el.classList.contains('expanded');document.querySelectorAll('.tier.expanded').forEach(c=>c.classList.remove('expanded'));if(!w)el.classList.add('expanded');}
+function togUps(el){const w=el.classList.contains('expanded');document.querySelectorAll('.ups.expanded').forEach(c=>c.classList.remove('expanded'));if(!w)el.classList.add('expanded');}
+</script>
+</body>
+</html>
